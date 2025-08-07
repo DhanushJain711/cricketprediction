@@ -1,0 +1,21 @@
+{
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.unusedImports": "never"
+        }
+    },
+    "ruff.path": ["/Users/dhanush/miniconda3/envs/cricketenv/bin/ruff"],
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.unusedImports": "never"
+    },
+    "autoDocstring.docstringFormat": "google",
+    "mypy.runUsingActiveInterpreter": true,
+    "mypy.configFile": "./pyproject.toml",
+    "mypy.checkNotebooks": false,
+    "python.terminal.activateEnvironment": false,
+}

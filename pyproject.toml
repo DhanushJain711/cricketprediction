@@ -1,0 +1,92 @@
+[project]
+name = "cricket-prediction"
+version = "0.1.0"
+description = "A machine learning API for predicting T20 cricket innings scores using ball-by-ball data."
+requires-python = ">=3.12, <3.13"
+
+dependencies = [
+    "fastapi>=0.116.1",
+    "uvicorn>=0.35.0",
+    "pydantic>=2.11.7",
+    "numpy>=2.1.3",
+    "pandas>=2.3.1",
+    "tensorflow>=2.19.0",
+    "keras>=3.11.1",
+    "scikit-learn>=1.7.1",
+    "joblib>=1.5.1",
+    "python-multipart>=0.0.20",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+    "pytest-mock",
+    "pre-commit",
+    "bandit",
+    "jupyter",
+    "notebook",
+    "requests",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+lint.select = ["E", "F", "I", "B", "UP", "SIM", "PL", "N", "RUF", "W", "S"]
+lint.ignore = ["E501"]                                                      # Opinionated, We have wide screen monitors
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "src",
+    "cricket_prediction",
+]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+# Set to 'true' to suppress errors for imports where mypy cannot find type info
+ignore_missing_imports = true
+
+mypy_path = "src"
+exclude = '''
+(?x)(
+    # Option 1: Exclude any directory named 'tests'
+    /tests/
+    |
+    # Option 2: Exclude Jupyter notebooks and data files
+    \.ipynb$
+    |
+    /data/
+)
+'''
+
+# ignore type checking in tests
+# per-module overrides (tests ignore strictness)
+[[tool.mypy.overrides]]
+# If your tests *are* import-able (e.g. `import tests.fake_module`)
+module = ["tests.*"]
+ignore_errors = true # silence all errors in test code
+
+[tool.bandit]
+# Use glob patterns to exclude all test directories from security scans
+exclude_dirs = ["**/tests", "**/__pycache__", "**/.ipynb_checkpoints"]
+
+skips = ["B101"] # Example: skip the 'assert' statement check
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

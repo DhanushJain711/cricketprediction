@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Score Predictor</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🏏 Cricket Score Predictor</h1>
+            <p>Predict the final T20 cricket score based on current match state</p>
+        </header>
+
+        <main class="main">
+            <form id="predictionForm" class="prediction-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="ball">Ball (e.g., 15.3 for 15th over, 3rd ball)</label>
+                        <input type="number" id="ball" name="ball" step="0.1" min="0.1" max="19.6" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="runs">Total Runs</label>
+                        <input type="number" id="runs" name="runs" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="wickets">Wickets Lost</label>
+                        <input type="number" id="wickets" name="wickets" min="0" max="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="striker_score">Striker Score</label>
+                        <input type="number" id="striker_score" name="striker_score" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="striker_balls">Striker Balls Faced</label>
+                        <input type="number" id="striker_balls" name="striker_balls" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="non_striker_runs">Non-Striker Score</label>
+                        <input type="number" id="non_striker_runs" name="non_striker_runs" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="non_striker_balls">Non-Striker Balls Faced</label>
+                        <input type="number" id="non_striker_balls" name="non_striker_balls" min="0" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="predict-btn" id="predictBtn">
+                    <span class="btn-text">Predict Final Score</span>
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                </button>
+            </form>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-card" id="resultCard">
+                    <h2>Predicted Final Score</h2>
+                    <div class="score-display">
+                        <span class="score-number" id="predictedScore">-</span>
+                        <span class="score-label">runs</span>
+                    </div>
+                    <p class="result-info">Based on current match state and historical T20 data</p>
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <p id="errorText"></p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Powered by Neural Network trained on T20I data • Typical accuracy: ±19.5 runs</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
