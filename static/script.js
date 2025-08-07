@@ -9,7 +9,7 @@ class CricketPredictor {
         this.errorMessage = document.getElementById('errorMessage');
         this.errorText = document.getElementById('errorText');
 
-        this.apiEndpoint = 'https:/cricpredictor-pb23.onrender.com/predict-score';
+        this.apiEndpoint = 'https://cricpredictor-pb23.onrender.com/predict-score';
 
         this.init();
     }
