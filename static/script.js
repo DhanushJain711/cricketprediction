@@ -9,7 +9,7 @@ class CricketPredictor {
         this.errorMessage = document.getElementById('errorMessage');
         this.errorText = document.getElementById('errorText');
 
-        this.apiEndpoint = 'http://localhost:8000/predict-score'; // Update with your FastAPI endpoint
+        this.apiEndpoint = 'https://cricpredictor-pb23.onrender.com/predict-score'; // Update with your FastAPI endpoint
 
         this.init();
     }
