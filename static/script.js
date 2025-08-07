@@ -8,17 +8,17 @@ class CricketPredictor {
         this.predictedScore = document.getElementById('predictedScore');
         this.errorMessage = document.getElementById('errorMessage');
         this.errorText = document.getElementById('errorText');
-        
-        this.apiEndpoint = 'http://localhost:8000/predict-score';
-        
+
+        this.apiEndpoint = 'https:/cricpredictor-pb23.onrender.com/predict-score';
+
         this.init();
     }
-    
+
     init() {
         this.form.addEventListener('submit', this.handleSubmit.bind(this));
         this.addInputValidation();
     }
-    
+
     addInputValidation() {
         const inputs = this.form.querySelectorAll('input');
         inputs.forEach(input => {
@@ -28,11 +28,11 @@ class CricketPredictor {
             });
         });
     }
-    
+
     validateInput(input) {
         const value = parseFloat(input.value);
         let isValid = true;
-        
+
         switch (input.name) {
             case 'ball':
                 if (value < 0.1 || value > 19.6) {
@@ -57,27 +57,27 @@ class CricketPredictor {
                 }
                 break;
         }
-        
+
         if (isValid) {
             input.style.borderColor = '#e1e5e9';
         }
     }
-    
+
     showFieldError(input, message) {
         input.style.borderColor = '#dc2626';
         input.title = message;
     }
-    
+
     async handleSubmit(e) {
         e.preventDefault();
-        
+
         if (!this.validateForm()) {
             return;
         }
-        
+
         this.setLoadingState(true);
         this.clearErrors();
-        
+
         try {
             const formData = this.getFormData();
             const prediction = await this.makePrediction(formData);
@@ -88,32 +88,32 @@ class CricketPredictor {
             this.setLoadingState(false);
         }
     }
-    
+
     validateForm() {
         const inputs = this.form.querySelectorAll('input[required]');
         let isValid = true;
-        
+
         inputs.forEach(input => {
             if (!input.value.trim()) {
                 this.showFieldError(input, 'This field is required');
                 isValid = false;
             }
         });
-        
+
         return isValid;
     }
-    
+
     getFormData() {
         const formData = new FormData(this.form);
         const data = {};
-        
+
         for (const [key, value] of formData.entries()) {
             data[key] = parseFloat(value);
         }
-        
+
         return data;
     }
-    
+
     async makePrediction(data) {
         const response = await fetch(this.apiEndpoint, {
             method: 'POST',
@@ -122,7 +122,7 @@ class CricketPredictor {
             },
             body: JSON.stringify(data),
         });
-        
+
         if (!response.ok) {
             if (response.status === 404) {
                 throw new Error('API endpoint not found. Make sure the FastAPI server is running on http://localhost:8000');
@@ -134,13 +134,13 @@ class CricketPredictor {
                 throw new Error(`Server error: ${response.status} ${response.statusText}`);
             }
         }
-        
+
         return await response.json();
     }
-    
+
     setLoadingState(isLoading) {
         this.predictBtn.disabled = isLoading;
-        
+
         if (isLoading) {
             this.btnText.textContent = 'Predicting...';
             this.loadingSpinner.style.display = 'block';
@@ -149,34 +149,34 @@ class CricketPredictor {
             this.loadingSpinner.style.display = 'none';
         }
     }
-    
+
     displayResult(score) {
         this.predictedScore.textContent = Math.round(score);
         this.resultContainer.classList.add('show');
-        
+
         // Smooth scroll to result
         setTimeout(() => {
-            this.resultContainer.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
+            this.resultContainer.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
             });
         }, 100);
     }
-    
+
     showError(message) {
         this.errorText.textContent = message;
         this.errorMessage.classList.add('show');
-        
+
         // Auto-hide error after 8 seconds
         setTimeout(() => {
             this.clearErrors();
         }, 8000);
     }
-    
+
     clearErrors() {
         this.errorMessage.classList.remove('show');
         this.resultContainer.classList.remove('show');
-        
+
         // Clear field-specific errors
         const inputs = this.form.querySelectorAll('input');
         inputs.forEach(input => {
@@ -189,7 +189,7 @@ class CricketPredictor {
 // Enhanced form interactions
 document.addEventListener('DOMContentLoaded', () => {
     new CricketPredictor();
-    
+
     // Add sample data button for testing
     const main = document.querySelector('.main');
     const sampleDataBtn = document.createElement('button');
@@ -207,15 +207,15 @@ document.addEventListener('DOMContentLoaded', () => {
         margin-bottom: 20px;
         transition: all 0.2s ease;
     `;
-    
+
     sampleDataBtn.addEventListener('mouseenter', () => {
         sampleDataBtn.style.backgroundColor = '#e5e7eb';
     });
-    
+
     sampleDataBtn.addEventListener('mouseleave', () => {
         sampleDataBtn.style.backgroundColor = '#f3f4f6';
     });
-    
+
     sampleDataBtn.addEventListener('click', () => {
         // Sample match state: 15th over, 3rd ball
         document.getElementById('ball').value = '15.3';
@@ -226,9 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('non_striker_runs').value = '28';
         document.getElementById('non_striker_balls').value = '21';
     });
-    
+
     main.insertBefore(sampleDataBtn, main.querySelector('.prediction-form'));
-    
+
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey || e.metaKey) {
