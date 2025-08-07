@@ -33,6 +33,10 @@ def root():
         return FileResponse(index_path)
     return {"message": "CricPredictor Predictor API"}
 
+@app.head("/")
+def head_root():
+    return {}
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
