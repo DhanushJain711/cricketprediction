@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy pyproject.toml first for better caching
+# Copy pyproject.toml
 COPY pyproject.toml /app/
 
 # Install Python dependencies

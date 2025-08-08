@@ -1,13 +1,54 @@
-# cricketprediction
-A machine learning model trained to predict the final scores of T20 cricket innings.
+# CricPredictor
 
-Data: I used ball-by-ball data from thousands of T20I matches, found here: [[data]](https://cricsheet.org/matches/)
-The data for each match came in seperate csv files. Each csv file contained columns for runs scored, wickets fallen, extras, etc. for each ball of the match. I used a python script to combine all the csvs into one large csv (combinecsv.py). I then loaded this combined csv into Jupyter Notebook to process it (dataprocessing.ipynb). Processing involved cleaning the dataset, as well as engineering more features for training such as run rate, strike rate, etc. I then exported this new dataset for use in training (the csv file was too large to upload to the respository)
+An end-to-end machine learning system for predicting T20 cricket final scores using ball-by-ball match data. The system includes data processing, neural network training, REST API deployment, containerization, and a web interface.
 
-Training: I trained a simple feedforward neural network on the data (neuralnet.ipynb). My first result was a mean absolute error (MAE) in runs of around 19.8, meaning the prediction was on average 19.8 runs off from the actual final score. I noticed that my network only trained for around 30 epochs, before it stopped due to increase in validation loss (overfitting). However, when I tried to implement some overfitting management techniques in the next iteration (L1/L2 regularization, dropout, learning rate scheduling), my MAE actually increased to around 23 (worse performance). Thus, the overfitting prevention actually made the model too general. So, I reverted the model back to its original form, only keeping batch normalization layers in the network. It was finally able to achieve an MAE of around 19.5.
+## Project Overview
 
-I also tested some other models on the task (othermodels.ipynb). A simple Linear Regressor achieved an MAE of 21.26, and a Gradient Boosting Regressor achieved an MAE of 20.21. Ultimately, the NN performed better, but only marginally.
+Predicts final T20 cricket innings scores with ~19.5 runs MAE using real-time match state data including current score, wickets, batsman stats, and match progress.
 
-Further work: The accuracy of the model can be definitely improved. An analysis of feature importance shows an overwhelming importance of run rate, so boosting this feature and removing other less important features may improve accuracy and reduce overfitting. Other models, such as XGBoost (a more robust gradient booster) may be more accurate. Because cricket is a sequential game, models that train on temporal data, such as an LSTM network, may also be powerful for the task. Of course, more data can also be used for extended training to improve accuracy (data from domestic leagues like the IPL, in addition to T20Is)
+**Try it out!** [https://cricpredictor-pb23.onrender.com](https://cricpredictor-pb23.onrender.com)
 
-This project was completed for the sole purpose of learning more about training and testing neural networks.
+## Machine Learning Models
+
+### Neural Network Architecture
+- **Model:** Feedforward neural network (64→32→16→1 neurons)
+- **Features:** 9 engineered features (ball, run_total, wickets, striker/non-striker scores and rates, overs_left, run_rate)
+- **Performance:** 19.5 MAE (Mean Absolute Error in runs)
+- **Framework:** Keras/TensorFlow with StandardScaler normalization
+- **Regularization:** Batch normalization, early stopping with validation monitoring
+
+### Model Comparison
+- **Neural Network:** 19.5 MAE
+- **Gradient Boosting:** 20.21 MAE
+- **Linear Regression:** 21.26 MAE
+
+### Data Pipeline
+- **Source:** Ball-by-ball T20I data from [cricsheet.org](https://cricsheet.org/matches/)
+- **Processing:** Feature engineering for run rates, strike rates, overs remaining
+- **Tools:** pandas, numpy for data manipulation; scikit-learn for preprocessing
+
+## API & Backend
+
+### FastAPI REST API
+- **Framework:** FastAPI with automatic OpenAPI documentation
+- **Endpoints:**
+  - `POST /predict-score`: Real-time score prediction
+  - `GET /health`: Health check endpoint
+  - `GET /`: Serves static web interface
+- **Features:** CORS middleware, request validation with Pydantic schemas
+- **Model Loading:** Keras model and StandardScaler loaded at startup
+
+### Containerization & Deployment
+The API was contaizerized using Docker and deployed live on Render.
+
+### File Structure
+```
+├── src/               # Backend services
+├──────app/            # FastAPI application
+├──────models/         # Jupyter notebooks for training
+├──────utils/          # Data processing utilities
+├── static/            # Frontend assets
+├── Dockerfile         # Container configuration
+└── pyproject.toml     # Python dependencies
+```
+
